@@ -10,7 +10,7 @@
 
     <ItemGroup>
         <Content Include="Assets/**" CopyToPublishDirectory="PreserveNewest" CopyToOutputDirectory="PreserveNewest" />
-        <PackageReference Include="RayWrapper" Version="0.4.0-beta-6.2" />
+        <PackageReference Include="RayWrapper" Version="0.4.0-beta-8.5" />
     </ItemGroup>
 
 </Project>

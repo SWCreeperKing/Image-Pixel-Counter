@@ -11,8 +11,6 @@ public class ImageSelection : GhostObject
 
     public ImageSelection()
     {
-        Text.Style.SetDefaultFont(Raylib.LoadFont("Assets/CascadiaCode.otf"));
-
         Text txt = new("Drop files to load", new Vector2(300, 300))
             { isVisible = new Actionable<bool>(() => !files.Any()) };
 

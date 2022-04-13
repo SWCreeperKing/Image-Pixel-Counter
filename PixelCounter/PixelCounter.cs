@@ -19,6 +19,7 @@ public class PixelCounter : GhostObject
     private Vector2 _imageSize;
     private bool _isDone;
     private bool _lastOrder;
+    private bool _closed;
 
     public PixelCounter(string file, string name)
     {
@@ -36,6 +37,9 @@ public class PixelCounter : GhostObject
                 onResult = r =>
                 {
                     if (r is "yes") Program.tb.RemoveTab(name);
+                    Raylib.UnloadImage(_img);
+                    Raylib.UnloadTexture(_texture);
+                    _closed = true;
                 }
             }.Show();
         };
@@ -54,7 +58,8 @@ public class PixelCounter : GhostObject
                 _imageData[y * (int) _imageSize.X + x] = data[y * (int) _imageSize.X + x];
             }
 
-            Text txt = new($"size of arr: {_imageData.Length} | size: {_imageSize}", new Vector2(325, 70));
+            Text txt = new(new Actionable<string>(() => $"size of arr: {_imageData.Length} | size: {_imageSize} | colors: {orderedPixelCounter.Count}"),
+                new Vector2(325, 70));
             RegisterGameObj(txt);
         }
 
@@ -74,7 +79,8 @@ public class PixelCounter : GhostObject
         copy.Clicked += () =>
         {
             if (!_isDone) return;
-            var list = string.Join("\n", orderedPixelCounter.Select(t => $"{t.Item1.GetStringComplex()}: {t.Item2:###,###}"));
+            var list = string.Join("\n",
+                orderedPixelCounter.Select(t => $"{t.Item1.GetStringComplex()}: {t.Item2:###,###}"));
             Raylib.SetClipboardText($"{name}'s make up in pixels:\n(r, g, b, a): amount\n```\n{list}```");
         };
 
@@ -126,6 +132,7 @@ public class PixelCounter : GhostObject
 
     ~PixelCounter()
     {
+        if (_closed) return;
         Raylib.UnloadImage(_img);
         Raylib.UnloadTexture(_texture);
     }
